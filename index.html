@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CUENTO MUNDIAL | Premium Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ========================================================
+   STACK & TOKENS (Premium Streaming UI)
+   ======================================================== */
+:root {
+  --bg-dark: #040914; --bg-surface: #0a1326; --bg-surface-hover: #0e1c36;
+  --mint: #00D4E0; --mint-glow: rgba(0, 212, 224, 0.3); --accent-blue: #1C4ED8;
+  --text-pure: #FFFFFF; --text-muted: #8B9BB4; --text-dark: #040914;
+  --border-subtle: rgba(255, 255, 255, 0.08); --border-mint: rgba(0, 212, 224, 0.2);
+  --font-display: 'Archivo Black', sans-serif; --font-body: 'Inter', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background-color: var(--bg-dark); color: var(--text-pure); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+body::before { content: ''; position: fixed; top: -20vh; left: 50%; transform: translateX(-50%); width: 80vw; height: 60vh; background: radial-gradient(ellipse at center, rgba(0, 212, 224, 0.08) 0%, transparent 70%); pointer-events: none; z-index: -1; }
+a { color: inherit; text-decoration: none; cursor: pointer; }
+img, video { max-width: 100%; display: block; border-radius: 8px; }
+
+/* Utilitarios de Vista */
+.hidden { display: none !important; }
+.fade-in { animation: fadeIn 0.4s ease forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Componentes Globales */
+.alert-strip { background: var(--mint); color: var(--text-dark); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; padding: 10px 0; overflow: hidden; position: relative; }
+.alert-ticker { display: inline-block; white-space: nowrap; animation: ticker 35s linear infinite; }
+.alert-ticker span { margin: 0 40px; }
+.alert-ticker span::before { content: '• '; font-weight: 900; }
+@keyframes ticker { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
+
+.masthead { padding: 60px 20px 40px; text-align: center; position: relative; }
+.mh-bar { position: absolute; top: 15px; left: 30px; right: 30px; display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.mh-bar a { color: var(--mint); transition: text-shadow 0.3s; }
+.mh-bar a:hover { text-shadow: 0 0 10px var(--mint-glow); }
+.logo-mark { font-family: var(--font-display); font-size: clamp(3.5rem, 8vw, 7rem); line-height: 0.9; letter-spacing: -0.04em; color: var(--text-pure); text-transform: uppercase; margin-bottom: 15px; animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; cursor:pointer; }
+.logo-mark .acc { color: var(--mint); display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+.badge-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 212, 224, 0.05); border: 1px solid var(--border-mint); color: var(--mint); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 6px 16px; border-radius: 100px; backdrop-filter: blur(4px); }
+.badge .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 8px var(--mint); animation: blink 2s infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.nav-wrap { position: sticky; top: 0; z-index: 500; background: rgba(4, 9, 20, 0.75); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.nav-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: center; overflow-x: auto; scrollbar-width: none; padding: 0 20px; }
+.nav-link { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); padding: 20px 18px; white-space: nowrap; position: relative; transition: 0.3s ease; border: none; background: transparent; }
+.nav-link:hover { color: var(--text-pure); }
+.nav-link.active { color: var(--mint); }
+.nav-link::after { content: ''; position: absolute; bottom: -1px; left: 0; width: 100%; height: 2px; background: var(--mint); transform: scaleX(0); transition: transform 0.3s ease; }
+.nav-link.active::after, .nav-link:hover::after { transform: scaleX(1); box-shadow: 0 -2px 10px var(--mint-glow); }
+
+.page-wrap { max-width: 1400px; margin: 0 auto; padding: 40px 20px 80px; min-height: 60vh; }
+.sec-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 15px; }
+.sec-hd-lbl { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: -0.02em; text-transform: uppercase; }
+.sec-hd-ct { font-size: 0.8rem; font-weight: 600; color: var(--mint); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Grillas */
+.hero-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 50px; }
+@media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; } }
+.hero-main, .hero-side { position: relative; overflow: hidden; border-radius: 16px; border: 1px solid var(--border-subtle); background: var(--bg-surface); transition: transform 0.3s, border-color 0.3s; display: block; }
+.hero-main { aspect-ratio: 16/9; } .hero-side { aspect-ratio: 4/3; }
+.hero-main:hover, .hero-side:hover { transform: translateY(-4px); border-color: var(--mint); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--mint-glow); }
+.hero-main img, .hero-side img { width: 100%; height: 100%; object-fit: cover; border-radius: 0; }
+.hero-ov { position: absolute; inset: 0; background: linear-gradient(to top, rgba(4, 9, 20, 0.95) 0%, rgba(4, 9, 20, 0.2) 60%, transparent 100%); }
+.hero-ct { position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px; }
+.hero-tag { display: inline-block; background: var(--mint); color: var(--text-dark); font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 14px; border-radius: 100px; margin-bottom: 12px; }
+.hero-ttl { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.5rem); line-height: 1.1; margin-bottom: 10px; letter-spacing: -0.02em; }
+.hero-sub { font-size: 1rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hero-meta { display: flex; align-items: center; gap: 10px; margin-top: 15px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+.hero-meta span:first-child { color: var(--text-pure); }
+.side-cards-wrap { display: flex; flex-direction: column; gap: 20px; }
+
+.g3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; margin-bottom: 40px; }
+.card { display: flex; flex-direction: column; background: var(--bg-surface); border-radius: 16px; border: 1px solid var(--border-subtle); overflow: hidden; transition: all 0.3s; position: relative; }
+.card:hover { transform: translateY(-5px); border-color: var(--border-mint); background: var(--bg-surface-hover); box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+.c-media { position: relative; aspect-ratio: 16/9; overflow: hidden; background: #0c1830; }
+.c-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; border-radius: 0; }
+.card:hover .c-media img { transform: scale(1.05); }
+.vid-pill { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); color: var(--text-pure); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 12px; border-radius: 100px; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.1); z-index: 2; }
+.vid-pill::before { content: ''; width: 8px; height: 8px; background: #FF0000; border-radius: 50%; }
+.feat-rib { position: absolute; top: 12px; right: 12px; background: var(--mint); color: var(--text-dark); font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 6px 12px; border-radius: 100px; z-index: 2; }
+.c-body { padding: 20px; display: flex; flex-direction: column; flex: 1; }
+.c-tag { color: var(--mint); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.c-ttl { font-family: var(--font-display); font-size: 1.25rem; line-height: 1.2; margin-bottom: 10px; letter-spacing: -0.01em; }
+.c-sub { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.c-meta { margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 500; color: var(--text-muted); }
+
+/* Artículo Simple */
+.single-wrap { display: grid; grid-template-columns: 1fr 340px; gap: 50px; align-items: start; }
+@media (max-width: 1024px) { .single-wrap { grid-template-columns: 1fr; } }
+.breadcrumb { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-bottom: 20px; }
+.breadcrumb a { color: var(--mint); margin-right: 5px; }
+.art-hdr { margin-bottom: 30px; }
+.art-pill { display: inline-block; background: rgba(0, 212, 224, 0.1); color: var(--mint); padding: 8px 16px; border-radius: 100px; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; margin-bottom: 20px; border: 1px solid var(--border-mint); }
+.art-ttl { font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1; margin-bottom: 20px; letter-spacing: -0.03em; }
+.art-sub { font-size: 1.25rem; color: var(--text-muted); line-height: 1.5; font-weight: 300; margin-bottom: 25px; }
+.art-byline { display: flex; align-items: center; gap: 15px; padding: 15px 0; border-top: 1px solid var(--border-subtle); border-bottom: 1px solid var(--border-subtle); font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; margin-bottom: 30px; }
+.by-author { color: var(--text-pure); font-weight: 800; }
+.yt-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 16px; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border: 1px solid var(--border-subtle); background: #000; }
+.yt-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+.art-media { width: 100%; max-height: 600px; object-fit: cover; border-radius: 16px; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); border: 1px solid var(--border-subtle); }
+.art-body { font-size: 1.1rem; line-height: 1.8; color: #D1D5DB; }
+.art-body p { margin-bottom: 1.5em; }
+.art-body h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--text-pure); margin: 2em 0 1em; letter-spacing: -0.02em; }
+.art-body blockquote { border-left: 4px solid var(--mint); background: var(--bg-surface); padding: 20px 30px; border-radius: 0 12px 12px 0; font-size: 1.25rem; font-style: italic; color: var(--text-pure); margin: 2em 0; }
+.s-aside { position: sticky; top: 100px; background: var(--bg-surface); border-radius: 16px; border: 1px solid var(--border-subtle); padding: 25px; }
+.s-aside-hd { font-family: var(--font-display); font-size: 1.2rem; text-transform: uppercase; margin-bottom: 20px; color: var(--text-pure); }
+.s-art { display: flex; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border-subtle); transition: 0.2s; }
+.s-art:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.s-art:hover .s-art-ttl { color: var(--mint); }
+.s-thumb { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: #1a2a45; }
+.s-art-tag { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px; }
+.s-art-ttl { font-weight: 600; font-size: 0.95rem; line-height: 1.3; color: var(--text-pure); }
+
+/* Componentes Varios */
+.cd-hero { background: var(--bg-surface); border: 1px solid var(--border-mint); border-radius: 16px; padding: 40px; margin-bottom: 50px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: space-between; }
+.cd-hero::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 50%; background: radial-gradient(circle at right, var(--mint-glow) 0%, transparent 70%); pointer-events: none; }
+.cd-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--mint); margin-bottom: 10px; }
+.cd-big { font-family: var(--font-display); font-size: 3rem; line-height: 1; text-transform: uppercase; letter-spacing: -0.02em; }
+.cd-boxes { display: flex; gap: 15px; }
+.cd-box { background: rgba(0, 212, 224, 0.05); border: 1px solid rgba(0, 212, 224, 0.2); border-radius: 12px; padding: 15px 20px; text-align: center; min-width: 90px; backdrop-filter: blur(4px); }
+.cd-n { font-family: var(--font-display); font-size: 2.5rem; color: var(--text-pure); display: block; line-height: 1; }
+.cd-l { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.1em; margin-top: 5px; display: block; }
+@media (max-width: 768px) { .cd-hero { flex-direction: column; text-align: center; gap: 30px; } }
+.empty { text-align: center; padding: 80px 20px; }
+.empty-ico { font-size: 4rem; margin-bottom: 20px; filter: grayscale(1) opacity(0.5); }
+.empty h3 { font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 10px; color: var(--text-pure); }
+.empty p { color: var(--text-muted); font-size: 1.1rem; }
+
+/* Botones y Admin */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 12px 24px; border-radius: 100px; cursor: pointer; transition: all 0.3s; border: none; outline: none; }
+.btn-gd { background: var(--mint); color: var(--text-dark); }
+.btn-gd:hover { background: #00E6F2; box-shadow: 0 0 20px var(--mint-glow); transform: translateY(-2px); }
+.btn-nv { background: rgba(255,255,255,0.1); color: var(--text-pure); border: 1px solid var(--border-subtle); }
+.btn-nv:hover { background: rgba(255,255,255,0.15); border-color: var(--mint); color: var(--mint); }
+.btn-rd { background: rgba(239, 68, 68, 0.1); color: #EF4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+.btn-rd:hover { background: #EF4444; color: white; }
+.btn-sm { padding: 8px 16px; font-size: 0.7rem; }
+
+.adm-top { background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+.adm-logo { font-family: var(--font-display); font-size: 1.5rem; color: var(--text-pure); }
+.adm-logo span { color: var(--mint); }
+.adm-body { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+.adm-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 40px; margin-bottom: 40px; }
+.adm-card-ttl { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 25px; color: var(--mint); }
+.f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.fg { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.fl { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
+.fi { background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle); color: var(--text-pure); padding: 14px 16px; font-family: var(--font-body); font-size: 0.9rem; border-radius: 8px; transition: 0.3s; width: 100%; }
+.fi:focus { outline: none; border-color: var(--mint); box-shadow: 0 0 0 3px rgba(0, 212, 224, 0.1); background: rgba(0,0,0,0.4); }
+textarea.fi { resize: vertical; min-height: 200px; }
+.fchk { display: flex; align-items: center; gap: 10px; cursor: pointer; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border: 1px solid var(--border-subtle); margin-top: 10px; }
+.fchk input { accent-color: var(--mint); width: 18px; height: 18px; }
+.fchk span { font-size: 0.9rem; font-weight: 600; }
+
+.adm-sec-ttl { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 20px; }
+.adm-lst { display: flex; flex-direction: column; gap: 10px; }
+.adm-row { display: grid; grid-template-columns: 60px 1fr auto auto auto auto; align-items: center; gap: 15px; background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 12px; border-radius: 12px; }
+.adm-row:hover { border-color: var(--border-mint); }
+.adm-thumb { width: 60px; height: 45px; object-fit: cover; border-radius: 6px; background: #1a2a45; }
+.adm-ttl { font-weight: 600; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.adm-sec { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--mint); background: rgba(0, 212, 224, 0.1); padding: 4px 10px; border-radius: 100px; }
+
+.lg-wrap { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.lg-card { background: var(--bg-surface); border: 1px solid var(--border-mint); padding: 50px 40px; border-radius: 20px; width: 100%; max-width: 420px; text-align: center; }
+.lg-err { background: rgba(239, 68, 68, 0.1); color: #FCA5A5; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; font-size: 0.85rem; }
+
+footer { background: #02050A; border-top: 1px solid var(--border-subtle); padding: 80px 20px 30px; margin-top: 50px; }
+.ft-inner { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px; margin-bottom: 60px; }
+.ft-col-hd { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-pure); margin-bottom: 20px; }
+.ft-links { list-style: none; }
+.ft-links li { margin-bottom: 12px; }
+.ft-links a { color: var(--text-muted); font-size: 0.9rem; transition: 0.2s; font-weight: 500; }
+.ft-links a:hover { color: var(--mint); padding-left: 5px; }
+@media (max-width: 768px) { .ft-inner { grid-template-columns: 1fr; } .adm-row { grid-template-columns: 1fr auto; } .adm-thumb, .adm-sec { display:none; } }
+</style>
+</head>
+<body>
+
+<!-- APP PÚBLICA -->
+<div id="view-public">
+  <div class="alert-strip">
+    <div class="alert-ticker">
+      <span>Streaming Premium de la Copa del Mundo 2026</span>
+      <span>48 Selecciones buscando la gloria en USA, Canadá y México</span>
+      <span>Sigue toda la información en vivo</span>
+    </div>
+  </div>
+
+  <header class="masthead">
+    <div class="mh-bar"><span id="date-display"></span><a onclick="navigate('admin-login')">System Access</a></div>
+    <div class="logo-mark" onclick="navigate('home')">CUENTO<span class="acc">MUNDIAL</span></div>
+    <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.2em;">El Fútbol se vive en Otro Nivel</div>
+    <div class="badge-row">
+      <div class="badge"><span class="pulse"></span>En Vivo</div>
+      <div class="badge">Usa / Can / Mex</div>
+    </div>
+  </header>
+
+  <nav class="nav-wrap">
+    <div class="nav-inner" id="nav-container">
+      <!-- Se llena vía JS -->
+    </div>
+  </nav>
+
+  <main class="page-wrap" id="public-main-content">
+    <!-- El contenido se inyecta aquí (Home, Categoría o Artículo) -->
+  </main>
+
+  <footer>
+    <div class="ft-inner">
+      <div>
+        <div class="logo-mark" style="font-size:2rem; animation:none; margin-bottom:10px;">CUENTO<br><span style="color:var(--mint)">MUNDIAL</span></div>
+        <p style="color:var(--text-muted); font-size:0.9rem; line-height:1.6; max-width:300px;">El sistema digital de información premium dedicado a la Copa del Mundo 2026. Data en vivo y performance de élite.</p>
+      </div>
+      <div>
+        <div class="ft-col-hd">Categorías</div>
+        <ul class="ft-links">
+          <li><a onclick="navigate('section', 'rumbo26')">Rumbo al Mundial</a></li>
+          <li><a onclick="navigate('section', 'selecciones')">Selecciones</a></li>
+          <li><a onclick="navigate('section', 'estrellas')">Estrellas</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="ft-col-hd">System</div>
+        <ul class="ft-links">
+          <li><a onclick="navigate('admin-login')">Admin Access</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="max-width:1400px; margin:0 auto; padding-top:30px; border-top:1px solid var(--border-subtle); display:flex; justify-content:space-between; font-size:0.8rem; color:var(--text-muted); font-weight:500;">
+      <span>© 2026 CUENTO MUNDIAL. APP CLIENT-SIDE.</span>
+      <a onclick="navigate('admin-login')" style="color:var(--mint); font-weight:700; text-transform:uppercase;">Internal Dashboard</a>
+    </div>
+  </footer>
+</div>
+
+<!-- LOGIN ADMIN -->
+<div id="view-admin-login" class="hidden">
+  <div class="lg-wrap fade-in">
+    <div class="lg-card">
+      <div class="logo-mark" style="font-size:3rem; margin-bottom:10px;" onclick="navigate('home')">CUENTO<br><span style="color:var(--mint)">MUNDIAL</span></div>
+      <div style="font-weight:600; color:var(--text-muted); margin-bottom:30px; letter-spacing:0.1em;">SYSTEM | REDACCIÓN</div>
+      <div id="login-error" class="lg-err hidden">⚠ Contraseña incorrecta</div>
+      <div style="background: rgba(0, 212, 224, 0.05); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.8rem; color: var(--text-muted); border: 1px solid var(--border-mint);">
+        <b>Nota de la Versión HTML:</b> Al no haber servidor, los datos se guardan en tu navegador (LocalStorage). Contraseña por defecto: <b>admin</b>
+      </div>
+      <form id="form-login" onsubmit="handleLogin(event)">
+        <input type="password" id="input-password" class="fi" placeholder="Contraseña de acceso" style="width:100%; text-align:center; font-size:1.1rem; margin-bottom:20px;" autofocus required>
+        <button type="submit" class="btn btn-gd" style="width:100%;">Acceder al Sistema</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="view-admin-panel" class="hidden">
+  <div class="adm-top fade-in">
+    <div class="adm-logo">CUENTO <span>MUNDIAL</span> / SYSTEM</div>
+    <div style="display:flex; gap:10px;">
+      <a onclick="navigate('home')" class="btn btn-nv btn-sm">Ver Sitio</a>
+      <a onclick="logout()" class="btn btn-rd btn-sm">Salir</a>
+    </div>
+  </div>
+  <div class="adm-body fade-in">
+    <div class="adm-card">
+      <div class="adm-card-ttl" id="admin-form-title">Nuevo Contenido</div>
+      <form id="form-article" onsubmit="saveArticle(event)">
+        <input type="hidden" id="art-id">
+        <div class="f2">
+          <div class="fg">
+            <label class="fl">Titular Principal</label>
+            <input type="text" id="art-title" class="fi" required placeholder="Ej. El Fútbol se vive aquí">
+          </div>
+          <div class="fg">
+            <label class="fl">Subtítulo / Bajada</label>
+            <input type="text" id="art-subtitle" class="fi" placeholder="Texto descriptivo breve">
+          </div>
+        </div>
+        <div class="f2">
+          <div class="fg">
+            <label class="fl">Categoría</label>
+            <select id="art-section" class="fi" required>
+              <option value="rumbo26">Rumbo al Mundial</option>
+              <option value="selecciones">Selecciones</option>
+              <option value="estrellas">Estrellas</option>
+              <option value="estadios">Estadios 2026</option>
+              <option value="pronosticos">Pronósticos</option>
+              <option value="opinion">Opinión</option>
+              <option value="videos">Videos</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="fl">Autor</label>
+            <input type="text" id="art-author" class="fi" placeholder="Nombre del redactor">
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Cuerpo del Artículo</label>
+          <textarea id="art-body" class="fi" required placeholder="HTML Básico permitido: <p>, <h2>, <blockquote>, <b>..."></textarea>
+        </div>
+
+        <div style="border-top: 1px solid var(--border-subtle); padding-top: 25px; margin-top: 15px;">
+          <div class="f2">
+            <div class="fg">
+              <label class="fl">Enlace de YouTube (Recomendado)</label>
+              <input type="text" id="art-youtube" class="fi" placeholder="Ej: https://www.youtube.com/watch?v=...">
+              <div style="font-size:0.7rem; color:var(--mint); margin-top:4px;">Extraerá la miniatura en HD automáticamente.</div>
+            </div>
+            <div class="fg">
+              <label class="fl">O URL de Imagen Web</label>
+              <input type="text" id="art-image-url" class="fi" placeholder="Ej: https://ejemplo.com/imagen.jpg">
+              <div style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">Usa URLs externas para no llenar el LocalStorage.</div>
+            </div>
+          </div>
+        </div>
+
+        <label class="fchk">
+          <input type="checkbox" id="art-featured" value="1">
+          <span>Destacar en Portada (Hero Section Principal)</span>
+        </label>
+        
+        <div style="display:flex; gap:15px; margin-top:30px;">
+          <button type="submit" class="btn btn-gd" id="btn-save-art">Publicar Ahora</button>
+          <button type="button" class="btn btn-nv" onclick="resetForm()">Limpiar / Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="adm-sec-ttl">Contenido Publicado</div>
+    <div id="admin-list">
+      <!-- Tabla de artículos vía JS -->
+    </div>
+  </div>
+</div>
+
+<script>
+/* ========================================================
+   SINGLE PAGE APPLICATION LOGIC (Puro JS)
+   ======================================================== */
+
+// --- 1. CONFIGURACIÓN Y ESTADOS ---
+const SECTIONS = {
+  portada:     { label: 'Portada', icon: '🌐' },
+  rumbo26:     { label: 'Rumbo al Mundial', icon: '🏆' },
+  selecciones: { label: 'Selecciones', icon: '🎽' },
+  estrellas:   { label: 'Estrellas', icon: '⭐' },
+  estadios:    { label: 'Estadios 2026', icon: '🏟️' },
+  pronosticos: { label: 'Pronósticos', icon: '📊' },
+  opinion:     { label: 'Opinión', icon: '✍️' },
+  videos:      { label: 'Videos', icon: '🎬' }
+};
+
+let articles = JSON.parse(localStorage.getItem('cm_articles')) || [];
+let currentView = 'home';
+let isAuthenticated = sessionStorage.getItem('cm_auth') === 'true';
+
+// --- 2. UTILIDADES ---
+const $ = id => document.getElementById(id);
+const saveToStorage = () => localStorage.setItem('cm_articles', JSON.stringify(articles));
+const extractYT = url => {
+  const match = url.match(/(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+  return match ? match[1] : '';
+};
+const timeAgo = ts => {
+  const d = Math.floor(Date.now() / 1000) - ts;
+  if (d < 60) return 'Ahora mismo';
+  if (d < 3600) return Math.floor(d/60) + ' min';
+  if (d < 86400) return Math.floor(d/3600) + 'h';
+  const dt = new Date(ts * 1000);
+  return dt.toLocaleDateString();
+};
+const getThumb = art => {
+  if (art.youtube) return `<img src="https://img.youtube.com/vi/${art.youtube}/maxresdefault.jpg" alt="Video">`;
+  if (art.image) return `<img src="${art.image}" alt="Image">`;
+  return `<div style="width:100%;height:100%;background:#0c1830;"></div>`;
+};
+
+// --- 3. NAVEGADOR (ROUTER) ---
+function navigate(view, param = null) {
+  $('view-public').classList.add('hidden');
+  $('view-admin-login').classList.add('hidden');
+  $('view-admin-panel').classList.add('hidden');
+
+  currentView = view;
+  
+  if (view === 'admin-login') {
+    if (isAuthenticated) navigate('admin-panel');
+    else $('view-admin-login').classList.remove('hidden');
+  } 
+  else if (view === 'admin-panel') {
+    if (!isAuthenticated) navigate('admin-login');
+    else {
+      $('view-admin-panel').classList.remove('hidden');
+      renderAdminTable();
+    }
+  } 
+  else {
+    $('view-public').classList.remove('hidden');
+    renderNav();
+    if (view === 'home') renderHome();
+    if (view === 'section') renderSection(param);
+    if (view === 'article') renderArticle(param);
+    window.scrollTo(0,0);
+  }
+}
+
+// --- 4. RENDER PUBLICO ---
+function renderNav() {
+  let html = `<a onclick="navigate('home')" class="nav-link ${currentView==='home'?'active':''}">Portada</a>`;
+  for(let k in SECTIONS) {
+    if(k==='portada') continue;
+    html += `<a onclick="navigate('section', '${k}')" class="nav-link ${currentView==='section' && window.currentCat===k?'active':''}">${SECTIONS[k].label}</a>`;
+  }
+  $('nav-container').innerHTML = html;
+}
+
+function renderHome() {
+  window.currentCat = null;
+  const main = $('public-main-content');
+  const sorted = [...articles].sort((a,b)=>b.created - a.created);
+  const featured = sorted.filter(a=>a.featured);
+  
+  const hMain = featured[0] || sorted[0];
+  const hSide1 = featured[1] || sorted[1];
+  const hSide2 = featured[2] || sorted[2];
+  
+  const skipIds = [hMain?.id, hSide1?.id, hSide2?.id];
+  const feed = sorted.filter(a => !skipIds.includes(a.id)).slice(0, 12);
+
+  let html = `
+    <div class="cd-hero fade-in">
+      <div><div class="cd-label">Kick-Off 2026</div><div class="cd-big">Cuenta<br>Regresiva</div></div>
+      <div class="cd-boxes" id="countdown">
+        <div class="cd-box"><span class="cd-n" id="cd-d">--</span><span class="cd-l">Días</span></div>
+        <div class="cd-box"><span class="cd-n" id="cd-h">--</span><span class="cd-l">Horas</span></div>
+        <div class="cd-box"><span class="cd-n" id="cd-m">--</span><span class="cd-l">Min</span></div>
+        <div class="cd-box"><span class="cd-n" id="cd-s">--</span><span class="cd-l">Seg</span></div>
+      </div>
+    </div>
+  `;
+
+  if (hMain) {
+    html += `<div class="hero-grid fade-in">
+      <a onclick="navigate('article', '${hMain.id}')" class="hero-main">
+        ${getThumb(hMain)}
+        ${hMain.youtube ? '<div class="vid-pill">▶ YouTube</div>' : ''}
+        <div class="hero-ov"></div>
+        <div class="hero-ct">
+          <div class="hero-tag">${SECTIONS[hMain.section].label}</div>
+          <h2 class="hero-ttl">${hMain.title}</h2>
+          ${hMain.subtitle ? `<p class="hero-sub">${hMain.subtitle}</p>` : ''}
+          <div class="hero-meta"><span>${hMain.author||'Desk'}</span><span>•</span><span>${timeAgo(hMain.created)}</span></div>
+        </div>
+      </a>
+      <div class="side-cards-wrap">`;
+      
+      if(hSide1) html += `
+        <a onclick="navigate('article', '${hSide1.id}')" class="hero-side">
+          ${getThumb(hSide1)}
+          ${hSide1.youtube ? '<div class="vid-pill">▶ YouTube</div>' : ''}
+          <div class="hero-ov"></div>
+          <div class="hero-ct" style="padding: 20px;">
+            <div class="hero-tag" style="font-size: 0.6rem; padding: 4px 10px;">${SECTIONS[hSide1.section].label}</div>
+            <h2 class="hero-ttl" style="font-size: 1.2rem; margin-bottom:0;">${hSide1.title}</h2>
+          </div>
+        </a>`;
+        
+      if(hSide2) html += `
+        <a onclick="navigate('article', '${hSide2.id}')" class="hero-side">
+          ${getThumb(hSide2)}
+          ${hSide2.youtube ? '<div class="vid-pill">▶ YouTube</div>' : ''}
+          <div class="hero-ov"></div>
+          <div class="hero-ct" style="padding: 20px;">
+            <div class="hero-tag" style="font-size: 0.6rem; padding: 4px 10px;">${SECTIONS[hSide2.section].label}</div>
+            <h2 class="hero-ttl" style="font-size: 1.2rem; margin-bottom:0;">${hSide2.title}</h2>
+          </div>
+        </a>`;
+        
+    html += `</div></div>`;
+  }
+
+  if (feed.length > 0) {
+    html += `<div class="sec-hd fade-in"><div class="sec-hd-lbl">Feed Principal</div></div><div class="g3 fade-in">`;
+    feed.forEach(a => {
+      html += `
+        <a onclick="navigate('article', '${a.id}')" class="card">
+          <div class="c-media">
+            ${getThumb(a)}
+            ${a.youtube ? '<div class="vid-pill">▶ YouTube</div>' : ''}
+            ${a.featured ? '<div class="feat-rib">Top</div>' : ''}
+          </div>
+          <div class="c-body">
+            <div class="c-tag">${SECTIONS[a.section].label}</div>
+            <h3 class="c-ttl">${a.title}</h3>
+            <div class="c-meta"><span>${a.author||'Desk'}</span><span>${timeAgo(a.created)}</span></div>
+          </div>
+        </a>`;
+    });
+    html += `</div>`;
+  }
+
+  if(!hMain && feed.length === 0) {
+    html += `<div class="empty fade-in"><div class="empty-ico">🚫</div><h3>Sin Contenido</h3><p>Ingresa al Admin Access para crear el primer artículo.</p></div>`;
+  }
+
+  main.innerHTML = html;
+  startCountdown();
+}
+
+function renderSection(cat) {
+  window.currentCat = cat;
+  renderNav();
+  const main = $('public-main-content');
+  const filtered = articles.filter(a => a.section === cat).sort((a,b)=>b.created - a.created);
+  
+  let html = `<div class="sec-hd fade-in"><div class="sec-hd-lbl">${SECTIONS[cat].label}</div><div class="sec-hd-ct">${filtered.length} Archivos</div></div>`;
+  
+  if(filtered.length === 0) {
+    html += `<div class="empty fade-in"><div class="empty-ico">📡</div><h3>No Signal</h3><p>Aún no hay contenido aquí.</p></div>`;
+  } else {
+    html += `<div class="g3 fade-in">`;
+    filtered.forEach(a => {
+      html += `
+        <a onclick="navigate('article', '${a.id}')" class="card">
+          <div class="c-media">${getThumb(a)}${a.youtube ? '<div class="vid-pill">▶ YouTube</div>' : ''}</div>
+          <div class="c-body">
+            <div class="c-tag">${SECTIONS[a.section].label}</div>
+            <h3 class="c-ttl">${a.title}</h3>
+            <div class="c-meta"><span>${a.author||'Desk'}</span><span>${timeAgo(a.created)}</span></div>
+          </div>
+        </a>`;
+    });
+    html += `</div>`;
+  }
+  main.innerHTML = html;
+}
+
+function renderArticle(id) {
+  const art = articles.find(a => a.id === id);
+  if(!art) return navigate('home');
+  const main = $('public-main-content');
+  const rels = articles.filter(a => a.id !== id).slice(0, 5);
+  
+  // Procesar saltos de linea básicos a HTML
+  let bodyHTML = art.body;
+  if (!bodyHTML.includes('<p>')) {
+    bodyHTML = '<p>' + bodyHTML.split('\n\n').filter(p=>p.trim()).join('</p><p>') + '</p>';
+  }
+
+  let html = `
+    <div class="single-wrap fade-in">
+      <article>
+        <div class="breadcrumb">
+          <a onclick="navigate('home')">Home</a> / <a onclick="navigate('section', '${art.section}')">${SECTIONS[art.section].label}</a> / Artículo
+        </div>
+        <div class="art-hdr">
+          <div class="art-pill">${SECTIONS[art.section].label}</div>
+          <h1 class="art-ttl">${art.title}</h1>
+          ${art.subtitle ? `<p class="art-sub">${art.subtitle}</p>` : ''}
+          <div class="art-byline">
+            <span class="by-author">${art.author||'Desk'}</span><span>—</span><span>${new Date(art.created*1000).toLocaleDateString()}</span>
+          </div>
+        </div>
+  `;
+
+  if (art.youtube) {
+    html += `<div class="yt-container"><iframe src="https://www.youtube.com/embed/${art.youtube}?autoplay=1&mute=1" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+  } else if (art.image) {
+    html += `<img src="${art.image}" class="art-media" alt="Media">`;
+  }
+
+  html += `<div class="art-body">${bodyHTML}</div></article><aside><div class="s-aside"><div class="s-aside-hd">Relacionados</div>`;
+  
+  rels.forEach(r => {
+    html += `
+      <a onclick="navigate('article', '${r.id}')" class="s-art">
+        <div class="s-thumb" style="overflow:hidden; position:relative;">${getThumb(r)}</div>
+        <div>
+          <div class="s-art-tag">${SECTIONS[r.section].label}</div>
+          <div class="s-art-ttl">${r.title}</div>
+        </div>
+      </a>`;
+  });
+  
+  html += `</div></aside></div>`;
+  main.innerHTML = html;
+}
+
+// --- 5. LOGICA ADMIN ---
+function handleLogin(e) {
+  e.preventDefault();
+  const pass = $('input-password').value;
+  if (pass === 'admin') { // Contraseña Hardcoded
+    sessionStorage.setItem('cm_auth', 'true');
+    isAuthenticated = true;
+    $('input-password').value = '';
+    $('login-error').classList.add('hidden');
+    navigate('admin-panel');
+  } else {
+    $('login-error').classList.remove('hidden');
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('cm_auth');
+  isAuthenticated = false;
+  navigate('home');
+}
+
+function resetForm() {
+  $('form-article').reset();
+  $('art-id').value = '';
+  $('admin-form-title').innerText = 'Nuevo Contenido';
+  $('btn-save-art').innerText = 'Publicar Ahora';
+  window.scrollTo(0,0);
+}
+
+function saveArticle(e) {
+  e.preventDefault();
+  const id = $('art-id').value || 'art_' + Date.now();
+  const isNew = !$('art-id').value;
+  
+  const ytVal = $('art-youtube').value;
+  const ytId = extractYT(ytVal) || '';
+  
+  const article = {
+    id: id,
+    title: $('art-title').value,
+    subtitle: $('art-subtitle').value,
+    section: $('art-section').value,
+    author: $('art-author').value,
+    body: $('art-body').value,
+    youtube: ytId,
+    image: $('art-image-url').value, // Solo URL guardada
+    featured: $('art-featured').checked,
+    created: isNew ? Math.floor(Date.now() / 1000) : articles.find(a=>a.id===id).created,
+  };
+
+  if (isNew) articles.unshift(article);
+  else articles = articles.map(a => a.id === id ? article : a);
+  
+  saveToStorage();
+  resetForm();
+  renderAdminTable();
+}
+
+function editArticle(id) {
+  const art = articles.find(a => a.id === id);
+  if(!art) return;
+  $('art-id').value = art.id;
+  $('art-title').value = art.title;
+  $('art-subtitle').value = art.subtitle || '';
+  $('art-section').value = art.section;
+  $('art-author').value = art.author || '';
+  $('art-body').value = art.body;
+  $('art-youtube').value = art.youtube ? `https://youtu.be/${art.youtube}` : '';
+  $('art-image-url').value = art.image || '';
+  $('art-featured').checked = art.featured;
+  
+  $('admin-form-title').innerText = 'Editar Contenido';
+  $('btn-save-art').innerText = 'Guardar Cambios';
+  window.scrollTo(0,0);
+}
+
+function deleteArticle(id) {
+  if(!confirm('¿Eliminar definitivamente este artículo?')) return;
+  articles = articles.filter(a => a.id !== id);
+  saveToStorage();
+  renderAdminTable();
+}
+
+function renderAdminTable() {
+  const container = $('admin-list');
+  if(articles.length === 0) {
+    container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-muted);border:1px dashed var(--border-subtle);border-radius:12px;">No hay contenido.</div>`;
+    return;
+  }
+  let html = '';
+  articles.forEach(a => {
+    html += `
+      <div class="adm-row fade-in">
+        <div class="adm-thumb" style="overflow:hidden;">${getThumb(a)}</div>
+        <div class="adm-ttl">${a.title}</div>
+        <div class="adm-sec">${SECTIONS[a.section].label}</div>
+        <div>${a.featured ? '<span style="color:var(--mint)">★ Destacado</span>' : ''}</div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="editArticle('${a.id}')" class="btn btn-nv btn-sm">Editar</button>
+          <button onclick="deleteArticle('${a.id}')" class="btn btn-rd btn-sm">Borrar</button>
+        </div>
+      </div>`;
+  });
+  container.innerHTML = html;
+}
+
+// --- 6. WIDGET COUNTDOWN ---
+let cdInterval;
+function startCountdown() {
+  clearInterval(cdInterval);
+  const T = new Date('2026-06-11T11:00:00-06:00').getTime();
+  const fmt = n => String(n).padStart(2,'0');
+  
+  const tick = () => {
+    const diff = T - Date.now();
+    const box = $('countdown');
+    if(!box) return clearInterval(cdInterval);
+    if(diff <= 0){ box.innerHTML='<div style="font-size:2rem;color:var(--mint);font-family:var(--font-display);">LIVE NOW</div>'; return; }
+    
+    const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+    if($('cd-d')) $('cd-d').textContent=d; 
+    if($('cd-h')) $('cd-h').textContent=fmt(h); 
+    if($('cd-m')) $('cd-m').textContent=fmt(m); 
+    if($('cd-s')) $('cd-s').textContent=fmt(s);
+  };
+  tick(); cdInterval = setInterval(tick, 1000);
+}
+
+// --- 7. INICIALIZACIÓN ---
+document.addEventListener('DOMContentLoaded', () => {
+  // Configurar fecha del header
+  const dias = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const now = new Date();
+  $('date-display').innerText = `${dias[now.getDay()]}, ${now.getDate()} ${meses[now.getMonth()]} ${now.getFullYear()}`;
+  
+  // Iniciar App
+  navigate('home');
+});
+</script>
+</body>
+</html>
